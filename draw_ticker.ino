@@ -1,11 +1,51 @@
 uint32_t effTimer;
 
+
 void effectsTick() {
-    if (millis() - effTimer >= ((currentMode < 5 || currentMode > 13) ? modes[currentMode].speed : 50) ) {
-        effTimer = millis();
-        fireRoutine();
+  if (!dawnFlag) {
+    if (ONflag && millis() - effTimer >= ((currentMode < 5 || currentMode > 13) ? modes[currentMode].speed : 50) ) {
+      effTimer = millis();
+      switch (currentMode) {
+        case 0: sparklesRoutine();
+          break;
+        case 1: fireRoutine();
+          break;
+        case 2: rainbowVertical();
+          break;
+        case 3: rainbowHorizontal();
+          break;
+        case 4: colorsRoutine();
+          break;
+        case 5: madnessNoise();
+          break;
+        case 6: cloudNoise();
+          break;
+        case 7: lavaNoise();
+          break;
+        case 8: plasmaNoise();
+          break;
+        case 9: rainbowNoise();
+          break;
+        case 10: rainbowStripeNoise();
+          break;
+        case 11: zebraNoise();
+          break;
+        case 12: forestNoise();
+          break;
+        case 13: oceanNoise();
+          break;
+        case 14: colorRoutine();
+          break;
+        case 15: snowRoutine();
+          break;
+        case 16: matrixRoutine();
+          break;
+        case 17: lightersRoutine();
+          break;
       }
-    FastLED.show();
+      FastLED.show();
+    }
+  }
 }
 
 /*

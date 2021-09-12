@@ -18,25 +18,29 @@
 CRGB leds[NUM_LEDS];
 int8_t currentMode = 0;
 boolean loadingFlag = true;
-unsigned char matrixValue[8][16];
+unsigned char matrixValue[11][16];
 struct {
   byte brightness = 50;
   byte speed = 100;
   byte scale = 7;
 } modes[MODE_AMOUNT];
 
+boolean ONflag = true;
+boolean dawnFlag = false;
+
 void setupMatrix()
 {
-FastLED.addLeds<CHIPSET, PIN_LED, COLOR_ORDER>(leds, NUM_LEDS)/*.setCorrection(TypicalLEDStrip)*/;
-FastLED.setBrightness(BRIGHTNESS);
-if (CURRENT_LIMIT > 0) FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
-FastLED.show();
-FastLED.clear();
+    FastLED.addLeds<CHIPSET, PIN_LED, COLOR_ORDER>(leds, NUM_LEDS)/*.setCorrection(TypicalLEDStrip)*/;
+    FastLED.setBrightness(BRIGHTNESS);
+    if (CURRENT_LIMIT > 0) FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
+    FastLED.show();
+    FastLED.clear();
 }
 
 void proccess()
 {
     effectsTick();
+    buttonTick();
 }
 
 
@@ -44,6 +48,8 @@ void setup()
 {
     memset(matrixValue, 0, sizeof(matrixValue));
     setupMatrix();
+    Serial.begin(9600);
+     Serial.setTimeout(50);
 }
 
 
