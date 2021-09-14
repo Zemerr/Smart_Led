@@ -41,15 +41,17 @@ void proccess()
 {
     effectsTick();
     buttonTick();
+    wifi_server_tick();
 }
 
 
 void setup()
 {
+    Serial.begin(9600);
+    Serial.setTimeout(50);
     memset(matrixValue, 0, sizeof(matrixValue));
     setupMatrix();
-    Serial.begin(9600);
-     Serial.setTimeout(50);
+    setup_wifi();
 }
 
 
