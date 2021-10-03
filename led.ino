@@ -1,4 +1,8 @@
 #include <FastLED.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h>
+#include <WiFiUdp.h>
 
 //-------НАЛАШТУВАННЯ МАТРИЦІ-------
 
@@ -28,6 +32,32 @@ struct {
 boolean ONflag = true;
 boolean dawnFlag = false;
 
+
+// -------------------WIFI/UDP---------------------
+
+
+WiFiServer server(80);
+WiFiUDP Udp;
+
+#ifndef APSSID
+#define APSSID "LAMP"
+#define APPSK  "smartledlamp"
+#endif
+#define AP_PORT 8888
+
+#define ESP_MODE 1
+
+/* Set these to your desired credentials. */
+const char *ssid = APSSID;
+const char *password = APPSK;
+unsigned int localPort = AP_PORT;
+
+String lampIP = "";
+
+char packetBuffer[UDP_TX_PACKET_MAX_SIZE + 1]; //buffer to hold incoming packet
+String inputBuffer;
+
+
 void setupMatrix()
 {
     FastLED.addLeds<CHIPSET, PIN_LED, COLOR_ORDER>(leds, NUM_LEDS)/*.setCorrection(TypicalLEDStrip)*/;
@@ -41,7 +71,7 @@ void proccess()
 {
     effectsTick();
     buttonTick();
-    wifi_server_tick();
+    server_tick();
 }
 
 

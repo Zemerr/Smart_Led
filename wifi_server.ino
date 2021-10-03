@@ -1,33 +1,3 @@
-#include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
-#include <WiFiManager.h>
-#include <WiFiUdp.h>
-
-
-
-//WiFiServer server(80);
-ESP8266WebServer server(80);  
-WiFiUDP Udp;
-
-#ifndef APSSID
-#define APSSID "ESPap"
-#define APPSK  "thereisnospoon"
-#endif
-#define AP_PORT 8888
-
-#define ESP_MODE 1
-
-/* Set these to your desired credentials. */
-const char *ssid = APSSID;
-const char *password = APPSK;
-unsigned int localPort = AP_PORT;
-
-String lampIP = "";
-
-
-void handleRoot() {
-  server.send(200, "text/html", "<h1>You are connected</h1>");
-}
 
 void setup_wifi() {
     if (ESP_MODE == 0) { 
@@ -40,7 +10,6 @@ void setup_wifi() {
       IPAddress myIP = WiFi.softAPIP();
       Serial.print("AP IP address: ");
       Serial.println(myIP);
-      server.on("/", handleRoot);
       server.begin();
     }
     else {
@@ -59,8 +28,4 @@ void setup_wifi() {
     Serial.println("HTTP server started");
     Serial.printf("UDP server on port %d\n", localPort);
     Udp.begin(localPort);
-}
-
-void wifi_server_tick() {
-//  server.handleClient();
 }
