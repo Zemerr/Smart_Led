@@ -48,7 +48,7 @@ void effectsTick() {
   }
 }
 
-/*
+
 void changePower() {
   if (ONflag) {
     effectsTick();
@@ -72,4 +72,4 @@ void changePower() {
     FastLED.show();
   }
 }
-*/
+

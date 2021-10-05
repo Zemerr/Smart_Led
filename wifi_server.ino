@@ -1,3 +1,9 @@
+void configModeCallback (WiFiManager *myWiFiManager) {
+  Serial.println("Entered config mode");
+  Serial.println(WiFi.softAPIP());
+
+  Serial.println(myWiFiManager->getConfigPortalSSID());
+}
 
 void setup_wifi() {
     if (ESP_MODE == 0) { 
@@ -13,11 +19,29 @@ void setup_wifi() {
       server.begin();
     }
     else {
-      Serial.print("WiFi manager");
-      WiFiManager wifiManager;
-      wifiManager.setDebugOutput(false);
+      Serial.println("WiFi manager start");
+      wifiManager.setDebugOutput(true);
+      wifiManager.resetSettings();
+//      wifiManager.setConnectTimeout(60);
+       Serial.println("WiFi connectt");
+       
+
+//      bool response;
+//      response = wifiManager.autoConnect("ssid","password");
+       Serial.println("WiFi res");
+       wifiManager.setConfigPortalBlocking(false);
+//       wifiManager.setAPCallback(configModeCallback);
+      if(!wifiManager.autoConnect(ssid,password)) {
+        Serial.println("failed to connect and hit timeout");
+        //reset and try again, or maybe put it to deep sleep
+//        ESP.reset();
+        delay(1000);
+      } 
+    
+      //if you get here you have connected to the WiFi
+      Serial.println("connected...yeey :)");
   
-      wifiManager.autoConnect(ssid, password);
+//      wifiManager.autoConnect(ssid, password);
       /*WiFi.config(IPAddress(IP_STA[0], IP_STA[1], IP_STA[2], IP_STA[3]),
                   IPAddress(192, 168, 1, 1),
                   IPAddress(255, 255, 255, 0));*/

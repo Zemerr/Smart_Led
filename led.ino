@@ -4,6 +4,8 @@
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
 
+#define _stackSize (5748/4) 
+
 //-------НАЛАШТУВАННЯ МАТРИЦІ-------
 
 #define PIN_LED D2
@@ -31,6 +33,8 @@ struct {
 
 boolean ONflag = true;
 boolean dawnFlag = false;
+boolean sendSettings_flag = false;
+boolean settChanged = false;
 
 
 // -------------------WIFI/UDP---------------------
@@ -46,6 +50,8 @@ WiFiUDP Udp;
 #define AP_PORT 8888
 
 #define ESP_MODE 1
+
+WiFiManager wifiManager;
 
 /* Set these to your desired credentials. */
 const char *ssid = APSSID;
@@ -64,7 +70,7 @@ void setupMatrix()
     FastLED.setBrightness(BRIGHTNESS);
     if (CURRENT_LIMIT > 0) FastLED.setMaxPowerInVoltsAndMilliamps(5, CURRENT_LIMIT);
     FastLED.show();
-    FastLED.clear();
+    // FastLED.clear();
 }
 
 void proccess()
@@ -72,15 +78,21 @@ void proccess()
     effectsTick();
     buttonTick();
     server_tick();
+     wifiManager.process();
+//    Serial.println(" in loop");
+    ESP.wdtFeed();   // пнуть собаку
+    yield();  // ещё раз пнуть собаку
 }
 
 
 void setup()
 {
+    ESP.wdtDisable();
     Serial.begin(9600);
     Serial.setTimeout(50);
     memset(matrixValue, 0, sizeof(matrixValue));
     setupMatrix();
+    delay(1000);
     setup_wifi();
 }
 

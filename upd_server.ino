@@ -1,5 +1,5 @@
 
-void wifi_server_tick() {
+void server_tick() {
     parseUDP();
 //  server.handleClient();
 }
@@ -15,7 +15,7 @@ void parseUDP() {
 
     if (inputBuffer.startsWith("DEB")) {
       if (sendSettings_flag) sendCurrent();
-      else inputBuffer = "OK " + timeClient.getFormattedTime();
+//      else inputBuffer = "OK " + timeClient.getFormattedTime();
       sendSettings_flag = false;
     } else if (inputBuffer.startsWith("GET")) {
       sendCurrent();
@@ -109,15 +109,15 @@ void sendSettings() {
   Udp.endPacket();
 }
 
-void sendAlarms() {
-  inputBuffer = "ALMS ";
-  for (byte i = 0; i < 7; i++) {
-    inputBuffer += String(alarm[i].state);
-    inputBuffer += " ";
-  }
-  for (byte i = 0; i < 7; i++) {
-    inputBuffer += String(alarm[i].time);
-    inputBuffer += " ";
-  }
-  inputBuffer += (dawnMode + 1);
-}
+// void sendAlarms() {
+//   inputBuffer = "ALMS ";
+//   for (byte i = 0; i < 7; i++) {
+//     inputBuffer += String(alarm[i].state);
+//     inputBuffer += " ";
+//   }
+//   for (byte i = 0; i < 7; i++) {
+//     inputBuffer += String(alarm[i].time);
+//     inputBuffer += " ";
+//   }
+//   inputBuffer += (dawnMode + 1);
+// }
