@@ -21,25 +21,26 @@ void setup_wifi() {
     else {
       Serial.println("WiFi manager start");
       wifiManager.setDebugOutput(true);
-      wifiManager.resetSettings();
+//      wifiManager.resetSettings();
 //      wifiManager.setConnectTimeout(60);
-       Serial.println("WiFi connectt");
+//       Serial.println("WiFi connect");
        
 
 //      bool response;
 //      response = wifiManager.autoConnect("ssid","password");
-       Serial.println("WiFi res");
+//       Serial.println("WiFi res");
        wifiManager.setConfigPortalBlocking(false);
 //       wifiManager.setAPCallback(configModeCallback);
       if(!wifiManager.autoConnect(ssid,password)) {
-        Serial.println("failed to connect and hit timeout");
+        Serial.println("failed to connect to WIFI network,");
+        notConnected = true;
         //reset and try again, or maybe put it to deep sleep
 //        ESP.reset();
-        delay(1000);
+//        delay(1000);
       } 
     
       //if you get here you have connected to the WiFi
-      Serial.println("connected...yeey :)");
+//      Serial.println("connected...yeey :)");
   
 //      wifiManager.autoConnect(ssid, password);
       /*WiFi.config(IPAddress(IP_STA[0], IP_STA[1], IP_STA[2], IP_STA[3]),

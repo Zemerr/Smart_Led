@@ -62,6 +62,7 @@ String lampIP = "";
 
 char packetBuffer[UDP_TX_PACKET_MAX_SIZE + 1]; //buffer to hold incoming packet
 String inputBuffer;
+boolean notConnected = false;
 
 
 void setupMatrix()
@@ -78,7 +79,9 @@ void proccess()
     effectsTick();
     buttonTick();
     server_tick();
+    if (notConnected) {
      wifiManager.process();
+    }
 //    Serial.println(" in loop");
     ESP.wdtFeed();   // пнуть собаку
     yield();  // ещё раз пнуть собаку
