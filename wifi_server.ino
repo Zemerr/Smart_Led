@@ -19,8 +19,10 @@ void setup_wifi() {
       server.begin();
     }
     else {
-      Serial.println("WiFi manager start");
+      Serial.println("WiFi manager starter");
       wifiManager.setDebugOutput(true);
+      wifiManager.setConnectTimeout(3);
+//      wifiManager.setTimeout(10);
 //      wifiManager.resetSettings();
 //      wifiManager.setConnectTimeout(60);
 //       Serial.println("WiFi connect");

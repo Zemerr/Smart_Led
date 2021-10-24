@@ -4,7 +4,7 @@
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
 
-#define _stackSize (5748/4) 
+//#define _stackSize (5748/4) 
 
 //-------НАЛАШТУВАННЯ МАТРИЦІ-------
 
