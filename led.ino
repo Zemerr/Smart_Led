@@ -46,6 +46,8 @@ WiFiUDP Udp;
 #ifndef APSSID
 #define APSSID "LAMP"
 #define APPSK  "smartledlamp"
+#define CLIENTANNOUNCE "I WANT FIND SERVERlamp SAM GORDON"
+#define SERVERANSWER "You find what you looking for Valera"
 #endif
 #define AP_PORT 8888
 
@@ -57,6 +59,8 @@ WiFiManager wifiManager;
 const char *ssid = APSSID;
 const char *password = APPSK;
 unsigned int localPort = AP_PORT;
+const String clientSay = CLIENTANNOUNCE;
+const String serverAnswer = SERVERANSWER;
 
 String lampIP = "";
 

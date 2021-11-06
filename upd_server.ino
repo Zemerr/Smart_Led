@@ -13,8 +13,14 @@ void parseUDP() {
 
     Serial.println(inputBuffer);
 
+    if (inputBuffer == clientSay)
+    {
+      sendReadyServer();
+    }
+
     if (inputBuffer.startsWith("DEB")) {
-      if (sendSettings_flag) sendCurrent();
+      if (sendSettings_flag)
+        sendCurrent();
 //      else inputBuffer = "OK " + timeClient.getFormattedTime();
       sendSettings_flag = false;
     } else if (inputBuffer.startsWith("GET")) {
@@ -98,6 +104,10 @@ void sendCurrent() {
   inputBuffer += String(modes[currentMode].scale);
   inputBuffer += " ";
   inputBuffer += String(ONflag);
+}
+
+void sendReadyServer() {
+  inputBuffer = serverAnswer;
 }
 
 void sendSettings() {
