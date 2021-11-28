@@ -52,10 +52,12 @@ void parseUDP() {
       ONflag = true;
       changePower();
       sendCurrent();
+      Serial.println("GET P_ON");
     } else if (inputBuffer.startsWith("P_OFF")) {
       ONflag = false;
       changePower();
       sendCurrent();
+      Serial.println("GET P_OFF");
     }
     //  else if (inputBuffer.startsWith("ALM_SET")) {
     //   byte alarmNum = (char)inputBuffer[7] - '0';

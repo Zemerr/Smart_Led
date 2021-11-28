@@ -6,41 +6,43 @@ void effectsTick() {
     if (ONflag && millis() - effTimer >= ((currentMode < 5 || currentMode > 13) ? modes[currentMode].speed : 50) ) {
       effTimer = millis();
       switch (currentMode) {
-        case 0: sparklesRoutine();
+        case 0: standart();
           break;
-        case 1: fireRoutine();
+        case 1: sparklesRoutine();
           break;
-        case 2: rainbowVertical();
+        case 2: fireRoutine();
           break;
-        case 3: rainbowHorizontal();
+        case 3: rainbowVertical();
           break;
-        case 4: colorsRoutine();
+        case 4: rainbowHorizontal();
           break;
-        case 5: madnessNoise();
+        case 5: colorsRoutine();
           break;
-        case 6: cloudNoise();
+        case 6: madnessNoise();
           break;
-        case 7: lavaNoise();
+        case 7: cloudNoise();
           break;
-        case 8: plasmaNoise();
+        case 8: lavaNoise();
           break;
-        case 9: rainbowNoise();
+        case 9: plasmaNoise();
           break;
-        case 10: rainbowStripeNoise();
+        case 10: rainbowNoise();
           break;
-        case 11: zebraNoise();
+        case 11: rainbowStripeNoise();
           break;
-        case 12: forestNoise();
+        case 12: zebraNoise();
           break;
-        case 13: oceanNoise();
+        case 13: forestNoise();
           break;
-        case 14: colorRoutine();
+        case 14: oceanNoise();
           break;
-        case 15: snowRoutine();
+        case 15: colorRoutine();
           break;
-        case 16: matrixRoutine();
+        case 16: snowRoutine();
           break;
-        case 17: lightersRoutine();
+        case 17: matrixRoutine();
+          break;
+        case 18: lightersRoutine();
           break;
       }
       FastLED.show();
@@ -72,4 +74,3 @@ void changePower() {
     FastLED.show();
   }
 }
-
