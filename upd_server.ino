@@ -10,9 +10,9 @@ void parseUDP() {
     int n = Udp.read(packetBuffer, UDP_TX_PACKET_MAX_SIZE);
     packetBuffer[n] = 0;
     inputBuffer = packetBuffer;
-
+#if DEBUG_MODE
     Serial.println(inputBuffer);
-
+#endif
     if (inputBuffer == clientSay)
     {
       sendReadyServer();
@@ -29,6 +29,9 @@ void parseUDP() {
     //   saveEEPROM();
       currentMode = (byte)inputBuffer.substring(3).toInt();
       loadingFlag = true;
+#if DEBUG_MODE
+      Serial.println(currentMode);
+#endif
       FastLED.clear();
       delay(1);
       sendCurrent();
@@ -37,27 +40,40 @@ void parseUDP() {
       modes[currentMode].brightness = inputBuffer.substring(3).toInt();
       FastLED.setBrightness(modes[currentMode].brightness);
       settChanged = true;
+#if DEBUG_MODE
+      Serial.println(modes[currentMode].brightness);
+#endif
     //   eepromTimer = millis();
     } else if (inputBuffer.startsWith("SPD")) {
       modes[currentMode].speed = inputBuffer.substring(3).toInt();
       loadingFlag = true;
       settChanged = true;
+#if DEBUG_MODE
+      Serial.println(modes[currentMode].speed);
+#endif
     //   eepromTimer = millis();
     } else if (inputBuffer.startsWith("SCA")) {
       modes[currentMode].scale = inputBuffer.substring(3).toInt();
       loadingFlag = true;
       settChanged = true;
+#if DEBUG_MODE
+      Serial.println(modes[currentMode].scale);
+#endif
     //   eepromTimer = millis();
     } else if (inputBuffer.startsWith("P_ON")) {
       ONflag = true;
       changePower();
       sendCurrent();
+#if DEBUG_MODE
       Serial.println("GET P_ON");
+#endif
     } else if (inputBuffer.startsWith("P_OFF")) {
       ONflag = false;
       changePower();
       sendCurrent();
+#if DEBUG_MODE
       Serial.println("GET P_OFF");
+#endif
     }
     //  else if (inputBuffer.startsWith("ALM_SET")) {
     //   byte alarmNum = (char)inputBuffer[7] - '0';

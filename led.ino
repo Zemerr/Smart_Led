@@ -6,6 +6,8 @@
 
 //#define _stackSize (5748/4) 
 
+#define DEBUG_MODE 1
+
 //-------НАЛАШТУВАННЯ МАТРИЦІ-------
 
 #define PIN_LED D2
@@ -95,8 +97,10 @@ void proccess()
 void setup()
 {
     ESP.wdtDisable();
+#if DEBUG_MODE
     Serial.begin(9600);
     Serial.setTimeout(50);
+#endif
     memset(matrixValue, 0, sizeof(matrixValue));
     setupMatrix();
     delay(1000);
