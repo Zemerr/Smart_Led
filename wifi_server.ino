@@ -5,6 +5,38 @@ void configModeCallback (WiFiManager *myWiFiManager) {
   Serial.println(myWiFiManager->getConfigPortalSSID());
 }
 
+void saveConfigCallback () {
+#if DEBUG_MODE
+  Serial.println("Should save config ********");
+  Serial.println(WiFi.status());
+#endif
+   if (WiFi.status() == WL_CONNECTED) {
+#if DEBUG_MODE
+      Serial.println("CONNECTED TO WIFI");
+#endif
+      wifiIndicator = true;
+      notConnected = false;
+      FastLED.clear();
+      delay(1);
+      WifiGreen();
+      FastLED.show();
+   }
+   else {
+#if DEBUG_MODE
+      Serial.println("NOT CONNECTED TO WIFI");
+#endif
+      wifiIndicator = true;
+      notConnected = true;
+      wifiManager.resetSettings();
+      FastLED.clear();
+      delay(1);
+      WifiRed();
+      FastLED.show();
+   }
+}
+
+
+
 void setup_wifi() {
     if (ESP_MODE == 0) { 
       delay(1000);
@@ -24,42 +56,34 @@ void setup_wifi() {
     }
     else {
 #if DEBUG_MODE
-      Serial.println("WiFi manager starter");
+      Serial.println("WiFi manager start");
+#endif
+#if (USE_BUTTON == 1)
+    if (digitalRead(BTN_PIN)) wifiManager.resetSettings();
 #endif
       wifiManager.setDebugOutput(true);
-      wifiManager.setConnectTimeout(3);
-//      wifiManager.setTimeout(10);
-//      wifiManager.resetSettings();
-//      wifiManager.setConnectTimeout(60);
-//       Serial.println("WiFi connect");
-       
+      wifiManager.setConnectTimeout(5);
 
-//      bool response;
-//      response = wifiManager.autoConnect("ssid","password");
-//       Serial.println("WiFi res");
-       wifiManager.setConfigPortalBlocking(false);
-//       wifiManager.setAPCallback(configModeCallback);
+#if DEBUG_MODE
+       //wifiManager.setAPCallback(configModeCallback);
+#endif
+      wifiManager.setSaveConfigCallback(saveConfigCallback);
+      wifiManager.setBreakAfterConfig(true);
+
+      wifiManager.setConfigPortalBlocking(false);
+
       if(!wifiManager.autoConnect(ssid,password)) {
 #if DEBUG_MODE
         Serial.println("failed to connect to WIFI network,");
 #endif
         notConnected = true;
-        //reset and try again, or maybe put it to deep sleep
-//        ESP.reset();
-//        delay(1000);
-      } 
-    
-      //if you get here you have connected to the WiFi
-//      Serial.println("connected...yeey :)");
-  
-//      wifiManager.autoConnect(ssid, password);
-      /*WiFi.config(IPAddress(IP_STA[0], IP_STA[1], IP_STA[2], IP_STA[3]),
-                  IPAddress(192, 168, 1, 1),
-                  IPAddress(255, 255, 255, 0));*/
+      }
+      else {
 #if DEBUG_MODE
-      Serial.print("Connected! IP address: ");
-      Serial.println(WiFi.localIP());
+          Serial.print("Connected! IP address: ");
+          Serial.println(WiFi.localIP());
 #endif
+      }
       lampIP = WiFi.localIP().toString();
     }
 #if DEBUG_MODE

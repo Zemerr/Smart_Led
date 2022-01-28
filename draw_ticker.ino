@@ -2,7 +2,7 @@ uint32_t effTimer;
 
 
 void effectsTick() {
-  if (!dawnFlag) {
+  if (!wifiIndicator) {
     if (ONflag && millis() - effTimer >= ((currentMode < 5 || currentMode > 13) ? modes[currentMode].speed : 50) ) {
       effTimer = millis();
       switch (currentMode) {
@@ -46,6 +46,20 @@ void effectsTick() {
           break;
       }
       FastLED.show();
+    }
+  }
+  else
+  {
+    if (ONflag && millis() - effTimer >= 5000) {
+      FastLED.clear();
+      delay(1);
+      wifiIndicator = false;
+      if (notConnected) {
+        setup_wifi();
+      }
+#if DEBUG_MODE
+      Serial.println("WIFIINDICATOR");
+#endif
     }
   }
 }

@@ -26,7 +26,7 @@ void parseUDP() {
     } else if (inputBuffer.startsWith("GET")) {
       sendCurrent();
     } else if (inputBuffer.startsWith("EFF")) {
-    //   saveEEPROM();
+      saveEEPROM();
       currentMode = (byte)inputBuffer.substring(3).toInt();
       loadingFlag = true;
 #if DEBUG_MODE
@@ -43,7 +43,7 @@ void parseUDP() {
 #if DEBUG_MODE
       Serial.println(modes[currentMode].brightness);
 #endif
-    //   eepromTimer = millis();
+      eepromTimer = millis();
     } else if (inputBuffer.startsWith("SPD")) {
       modes[currentMode].speed = inputBuffer.substring(3).toInt();
       loadingFlag = true;
@@ -51,7 +51,7 @@ void parseUDP() {
 #if DEBUG_MODE
       Serial.println(modes[currentMode].speed);
 #endif
-    //   eepromTimer = millis();
+      eepromTimer = millis();
     } else if (inputBuffer.startsWith("SCA")) {
       modes[currentMode].scale = inputBuffer.substring(3).toInt();
       loadingFlag = true;
@@ -59,7 +59,7 @@ void parseUDP() {
 #if DEBUG_MODE
       Serial.println(modes[currentMode].scale);
 #endif
-    //   eepromTimer = millis();
+      eepromTimer = millis();
     } else if (inputBuffer.startsWith("P_ON")) {
       ONflag = true;
       changePower();

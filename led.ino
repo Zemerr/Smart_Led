@@ -3,13 +3,18 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h>
 #include <WiFiUdp.h>
+#include <EEPROM.h>
+#include <GyverButton.h>
 
 //#define _stackSize (5748/4) 
 
 #define DEBUG_MODE 1
 
+#define USE_BUTTON 1    // 1 - использовать кнопку, 0 - нет
+
 //-------НАЛАШТУВАННЯ МАТРИЦІ-------
 
+#define BTN_PIN D6
 #define PIN_LED D2
 #define CHIPSET WS2812B
 #define COLOR_ORDER
@@ -34,7 +39,8 @@ struct {
 } modes[MODE_AMOUNT];
 
 boolean ONflag = true;
-boolean dawnFlag = false;
+// boolean dawnFlag = false;
+boolean wifiIndicator = false;
 boolean sendSettings_flag = false;
 boolean settChanged = false;
 
@@ -55,6 +61,11 @@ WiFiUDP Udp;
 
 #define ESP_MODE 1
 
+// ---------------- БИБЛИОТЕКИ -----------------
+#define FASTLED_INTERRUPT_RETRY_COUNT 0
+#define FASTLED_ALLOW_INTERRUPTS 0
+#define FASTLED_ESP8266_RAW_PIN_ORDER
+
 WiFiManager wifiManager;
 
 /* Set these to your desired credentials. */
@@ -70,6 +81,9 @@ char packetBuffer[UDP_TX_PACKET_MAX_SIZE + 1]; //buffer to hold incoming packet
 String inputBuffer;
 boolean notConnected = false;
 
+GButton touch(BTN_PIN, LOW_PULL, NORM_OPEN);
+uint32_t eepromTimer;
+
 
 void setupMatrix()
 {
@@ -80,6 +94,39 @@ void setupMatrix()
     // FastLED.clear();
 }
 
+void setEeprom()
+{
+ // EEPROM
+  EEPROM.begin(202);
+  delay(50);
+  if (EEPROM.read(198) != 20) {  // первый запуск
+    EEPROM.write(198, 20);
+    EEPROM.commit();
+
+    for (byte i = 0; i < MODE_AMOUNT; i++) {
+      EEPROM.put(3 * i + 40, modes[i]);
+      EEPROM.commit();
+    }
+    // for (byte i = 0; i < 7; i++) {
+    //   EEPROM.write(5 * i, alarm[i].state);   // рассвет
+    //   eeWriteInt(5 * i + 1, alarm[i].time);
+    //   EEPROM.commit();
+    // }
+    // EEPROM.write(199, 0);   // рассвет
+    EEPROM.write(200, 0);   // режим
+    EEPROM.commit();
+  }
+  for (byte i = 0; i < MODE_AMOUNT; i++) {
+    EEPROM.get(3 * i + 40, modes[i]);
+  }
+//   for (byte i = 0; i < 7; i++) {
+//     alarm[i].state = EEPROM.read(5 * i);
+//     alarm[i].time = eeGetInt(5 * i + 1);
+//   }
+//   dawnMode = EEPROM.read(199);
+  currentMode = (int8_t)EEPROM.read(200);
+}
+
 void proccess()
 {
     effectsTick();
@@ -88,7 +135,10 @@ void proccess()
     if (notConnected) {
      wifiManager.process();
     }
-//    Serial.println(" in loop");
+    eepromTick();
+#if (USE_BUTTON == 1)
+    buttonTick();
+#endif
     ESP.wdtFeed();   // пнуть собаку
     yield();  // ещё раз пнуть собаку
 }
@@ -105,10 +155,31 @@ void setup()
     setupMatrix();
     delay(1000);
     setup_wifi();
+    setEeprom();
+    randomSeed(micros());
 }
 
 
 void loop()
 {
     proccess();
+}
+
+void eeWriteInt(int pos, int val) {
+  byte* p = (byte*) &val;
+  EEPROM.write(pos, *p);
+  EEPROM.write(pos + 1, *(p + 1));
+  EEPROM.write(pos + 2, *(p + 2));
+  EEPROM.write(pos + 3, *(p + 3));
+  EEPROM.commit();
+}
+
+int eeGetInt(int pos) {
+  int val;
+  byte* p = (byte*) &val;
+  *p        = EEPROM.read(pos);
+  *(p + 1)  = EEPROM.read(pos + 1);
+  *(p + 2)  = EEPROM.read(pos + 2);
+  *(p + 3)  = EEPROM.read(pos + 3);
+  return val;
 }
